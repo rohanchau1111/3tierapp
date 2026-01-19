@@ -3,10 +3,10 @@ name: Build & Push MyBookCollection Images
 on:
   push:
     branches:
-      - master
+      - feature/test
   pull_request:
     branches:
-      - master
+      - feature/test
 
 jobs:
   build:
