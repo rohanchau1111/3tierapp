@@ -7,7 +7,7 @@ import { Injectable } from '@angular/core';
 export class ApiService {
 
   // Kubernetes service name + port
-  private baseUrl: string = 'http://52.224.87.132:30081';
+  private baseUrl: string = 'http://localhost:8080';
 
   constructor(private http: HttpClient) {}
 
