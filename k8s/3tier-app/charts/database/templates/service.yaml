@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-mysql
+  labels:
+    app: mysql
+    release: {{ .Release.Name }}
+spec:
+  clusterIP: None
+  selector:
+    app: mysql
+    release: {{ .Release.Name }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: {{ .Values.containerPort }}

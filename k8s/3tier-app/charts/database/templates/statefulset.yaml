@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Release.Name }}-mysql
+  labels:
+    app: mysql
+    release: {{ .Release.Name }}
+spec:
+  serviceName: {{ .Release.Name }}-mysql
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: mysql
+      release: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: mysql
+        release: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: mysql
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+
+          envFrom:
+            - secretRef:
+                name: {{ .Values.secrets.name }}
+
+          ports:
+            - containerPort: {{ .Values.containerPort }}
+
+          volumeMounts:
+            - name: mysql-data
+              mountPath: {{ .Values.persistence.mountPath }}
+
+  volumeClaimTemplates:
+    - metadata:
+        name: mysql-data
+      spec:
+        accessModes:
+          - {{ .Values.persistence.accessMode }}
+        resources:
+          requests:
+            storage: {{ .Values.persistence.size }}

@@ -1,0 +1,23 @@
+replicaCount: 2
+
+image:
+  repository: sarocky/3tier-backend
+  tag: latest
+  pullPolicy: Always
+
+containerPort: 8080
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+
+env:
+  databaseHost: app-mysql
+  databasePort: "3306"
+
+secrets:
+  name: mysql-secrets
+  databaseKey: MYSQL_DATABASE
+  userKey: MYSQL_USER
+  passwordKey: MYSQL_PASSWORD
