@@ -13,7 +13,7 @@ service:
   targetPort: 8080
 
 env:
-  databaseHost: app-mysql
+  databaseHost: db
   databasePort: "3306"
 
 secrets:
