@@ -13,6 +13,12 @@ service:
 secrets:
   name: mysql-secrets
 
+mysql:
+  rootPassword: rootpass123
+  database: bookDatabase
+  user: appuser
+  password: apppass123
+
 persistence:
   enabled: true
   mountPath: /var/lib/mysql
