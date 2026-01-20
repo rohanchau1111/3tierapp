@@ -1,12 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiService {
-  // Kubernetes service name + port
-  private baseUrl: string = 'http://app-backend:8080'; 
+  // Kubernetes service name + port 
+   // private baseUrl: string = 'http://app-backend:8080'; 
+  private baseUrl = environment.apiUrl;
 
   constructor(private http: HttpClient) {}
 
