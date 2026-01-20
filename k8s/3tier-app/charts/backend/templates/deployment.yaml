@@ -26,8 +26,8 @@ spec:
 
           env:
             - name: DATABASE_HOST
-             # value: {{ .Values.env.databaseHost | quote }}
-              value: app-mysql
+              value: {{ .Values.env.databaseHost | quote }}
+      
             - name: DATABASE_PORT
               value: {{ .Values.env.databasePort | quote }}
 
