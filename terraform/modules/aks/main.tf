@@ -9,7 +9,7 @@ resource "azurerm_kubernetes_cluster" "this" {
   resource_group_name = var.resource_group_name
   dns_prefix          = "3tier"
 
-  default_node_pool {
+  default_node_pool { 
     name           = "system"
     node_count     = 2
     vm_size = "Standard_DC2s_v3"
