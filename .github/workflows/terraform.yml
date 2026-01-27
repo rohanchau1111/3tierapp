@@ -44,7 +44,7 @@ jobs:
         working-directory: terraform
         run: terraform plan
 
-      # - name: Terraform Apply
-      #   if: github.ref == 'refs/heads/feature/test' && github.event_name == 'push'
-      #   working-directory: terraform
-      #   run: terraform apply -auto-approve
+      - name: Terraform Apply
+        if: github.ref == 'refs/heads/feature-local/test' && github.event_name == 'push'
+        working-directory: terraform
+        run: terraform apply -auto-approve
