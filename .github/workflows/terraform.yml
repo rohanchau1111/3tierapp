@@ -6,12 +6,23 @@ on:
       - feature-local/test
     paths:
       - "terraform/**"
+
   pull_request:
     branches:
       - feature-local/test
     paths:
       - "terraform/**"
+
   workflow_dispatch:
+    inputs:
+      action:
+        description: "Terraform action to run"
+        required: true
+        default: "plan"
+        type: choice
+        options:
+          - plan
+          - apply
 
 jobs:
   terraform:
@@ -45,6 +56,8 @@ jobs:
         run: terraform plan
 
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/feature-local/test' && github.event_name == 'push'
+        if: |
+          (github.event_name == 'push' && github.ref == 'refs/heads/feature-local/test') ||
+          (github.event_name == 'workflow_dispatch' && inputs.action == 'apply')
         working-directory: terraform
         run: terraform apply -auto-approve
