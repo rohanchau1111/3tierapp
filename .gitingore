@@ -1,0 +1,66 @@
+####################################
+# OS / Editor
+####################################
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+*.iml
+
+####################################
+# Node / Angular
+####################################
+AngularCRUD/node_modules/
+AngularCRUD/dist/
+AngularCRUD/.angular/
+AngularCRUD/.cache/
+AngularCRUD/npm-debug.log*
+AngularCRUD/yarn-error.log*
+
+####################################
+# Java / Spring Boot / Gradle
+####################################
+SpringCRUD/build/
+SpringCRUD/.gradle/
+SpringCRUD/out/
+SpringCRUD/*.log
+
+####################################
+# Terraform
+####################################
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/*.tfstate
+terraform/*.tfstate.backup
+terraform/*.tfvars
+terraform/crash.log
+
+####################################
+# Kubernetes / Helm
+####################################
+*.tgz
+k8s/*.log
+
+####################################
+# Docker
+####################################
+*.env
+.env
+docker-compose.override.yml
+
+####################################
+# Security / Secrets (IMPORTANT)
+####################################
+**/secrets.yaml
+**/*secret*.yaml
+**/*password*
+**/*key*
+**/*.pem
+
+####################################
+# Logs
+####################################
+*.log
+logs/
