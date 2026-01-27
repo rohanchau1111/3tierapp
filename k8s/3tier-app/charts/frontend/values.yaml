@@ -29,7 +29,7 @@ resources:
 
 
 service:
-  type: NodePort
+  type: LoadBalancer
 
   port: 80
   targetPort: 80

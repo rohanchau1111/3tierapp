@@ -1,41 +1,58 @@
-name: Build & Push MyBookCollection Images
+name: Build & Push Images to Azure ACR
 
 on:
   push:
     branches:
-      - feature/test
+      - feature-local/test
   pull_request:
     branches:
-      - feature/test
+      - feature-local/test
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      ACR_NAME: tierappacr123
+      ACR_LOGIN_SERVER: tierappacr123.azurecr.io
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - uses: docker/setup-buildx-action@v3
-
-      - uses: docker/login-action@v3
+      # Login to Azure using Service Principal
+      - name: Azure Login
+        uses: azure/login@v1
         with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          client-secret: ${{ secrets.AZURE_CLIENT_SECRET }}
 
+      # Login Docker to Azure Container Registry
+      - name: ACR Login
+        run: |
+          az acr login --name $ACR_NAME
+
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Build & Push Backend
       - name: Build & Push Backend Image
         uses: docker/build-push-action@v5
         with:
           context: ./SpringCRUD
           push: true
           tags: |
-            sarocky/3tier-backend:latest
-            sarocky/3tier-backend:${{ github.sha }}
+            tierappacr123.azurecr.io/3tier-backend:latest
+            tierappacr123.azurecr.io/3tier-backend:${{ github.sha }}
 
+      # Build & Push Frontend
       - name: Build & Push Frontend Image
         uses: docker/build-push-action@v5
         with:
           context: ./AngularCRUD
           push: true
           tags: |
-            sarocky/3tier-frontend:latest
-            sarocky/3tier-frontend:${{ github.sha }}
+            tierappacr123.azurecr.io/3tier-frontend:latest
+            tierappacr123.azurecr.io/3tier-frontend:${{ github.sha }}
