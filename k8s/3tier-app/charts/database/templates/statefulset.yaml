@@ -5,18 +5,22 @@ metadata:
   labels:
     app: mysql
     release: {{ .Release.Name }}
+
 spec:
   serviceName: {{ .Release.Name }}-mysql
   replicas: {{ .Values.replicaCount }}
+
   selector:
     matchLabels:
       app: mysql
       release: {{ .Release.Name }}
+
   template:
     metadata:
       labels:
         app: mysql
         release: {{ .Release.Name }}
+
     spec:
       containers:
         - name: mysql
@@ -33,6 +37,19 @@ spec:
           volumeMounts:
             - name: mysql-data
               mountPath: {{ .Values.persistence.mountPath }}
+
+            # 🔐 Required for Key Vault CSI
+            - name: secrets-store
+              mountPath: /mnt/secrets
+              readOnly: true
+
+      volumes:
+        - name: secrets-store
+          csi:
+            driver: secrets-store.csi.k8s.io
+            readOnly: true
+            volumeAttributes:
+              secretProviderClass: mysql-akv
 
   volumeClaimTemplates:
     - metadata:
