@@ -27,9 +27,10 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
+          # ✅ LOAD ALL MYSQL ENV VARS FROM AKV SYNCED SECRET
           envFrom:
             - secretRef:
-                name: {{ .Values.secrets.name }}
+                name: mysql-akv
 
           ports:
             - containerPort: {{ .Values.containerPort }}
@@ -38,9 +39,9 @@ spec:
             - name: mysql-data
               mountPath: {{ .Values.persistence.mountPath }}
 
-            # 🔐 Required for Key Vault CSI
+            # 🔐 Azure Key Vault CSI mount (still needed for sync)
             - name: secrets-store
-              mountPath: /mnt/secrets
+              mountPath: /mnt/secrets-store
               readOnly: true
 
       volumes:

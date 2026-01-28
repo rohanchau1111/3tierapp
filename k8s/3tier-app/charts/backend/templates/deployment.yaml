@@ -5,46 +5,39 @@ metadata:
   labels:
     app: backend
     release: {{ .Release.Name }}
+
 spec:
   replicas: {{ .Values.replicaCount }}
+
   selector:
     matchLabels:
       app: backend
       release: {{ .Release.Name }}
+
   template:
     metadata:
       labels:
         app: backend
         release: {{ .Release.Name }}
+
     spec:
       containers:
         - name: backend
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+
           ports:
             - containerPort: {{ .Values.containerPort }}
 
+          # ✅ NON-SECRET CONFIG
           env:
             - name: DATABASE_HOST
               value: {{ .Values.env.databaseHost | quote }}
-      
+
             - name: DATABASE_PORT
               value: {{ .Values.env.databasePort | quote }}
 
-            - name: MYSQL_DATABASE
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secrets.name }}
-                  key: {{ .Values.secrets.databaseKey }}
-
-            - name: MYSQL_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secrets.name }}
-                  key: {{ .Values.secrets.userKey }}
-
-            - name: MYSQL_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.secrets.name }}
-                  key: {{ .Values.secrets.passwordKey }}
+          # 🔐 LOAD ALL MYSQL SECRETS FROM AKV-SYNCED SECRET
+          envFrom:
+            - secretRef:
+                name: mysql-akv
