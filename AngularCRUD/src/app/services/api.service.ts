@@ -6,9 +6,8 @@ import { environment } from 'src/environments/environment';
   providedIn: 'root',
 })
 export class ApiService {
-  // Kubernetes service name + port 
-   // private baseUrl: string = 'http://app-backend:8080'; 
-  private baseUrl = environment.apiUrl;
+ 
+  baseUrl = '/api';
 
   constructor(private http: HttpClient) {}
 

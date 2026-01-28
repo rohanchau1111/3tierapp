@@ -27,11 +27,6 @@ resources:
     cpu: "300m"
     memory: "256Mi"
 
-
 service:
   type: LoadBalancer
-
   port: 80
-  targetPort: 80
-
-  nodePort: 30080
