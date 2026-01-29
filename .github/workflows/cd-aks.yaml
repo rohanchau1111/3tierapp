@@ -1,0 +1,46 @@
+name: CD - Deploy to AKS
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types: [completed]
+
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    environment: dev
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # 🔐 Azure Login
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # ☸️ AKS Context
+      - name: Set AKS context
+        uses: azure/aks-set-context@v3
+        with:
+          resource-group: ${{ vars.AKS_RESOURCE_GROUP }}
+          cluster-name: ${{ vars.AKS_CLUSTER_NAME }}
+
+      # ⎈ Helm
+      - name: Setup Helm
+        uses: azure/setup-helm@v4
+
+      # 🚀 Deploy Helm Chart
+      - name: Deploy using Helm
+        run: |
+          helm upgrade --install ${{ vars.HELM_RELEASE }} ./k8s/3tier-app \
+            --namespace ${{ vars.NAMESPACE }} \
+            --create-namespace \
+            --set backend.image.repository=${{ vars.ACR_LOGIN_SERVER }}/3tier-backend \
+            --set backend.image.tag=${{ github.event.workflow_run.head_sha || github.sha }} \
+            --set frontend.image.repository=${{ vars.ACR_LOGIN_SERVER }}/3tier-frontend \
+            --set frontend.image.tag=${{ github.event.workflow_run.head_sha || github.sha }}

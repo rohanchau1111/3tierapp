@@ -1,16 +1,15 @@
 replicaCount: 2
 
 image:
-  repository: sarocky/3tier-backend
+  repository: tierappacr123.azurecr.io/3tier-backend
   tag: latest
   pullPolicy: Always
 
 containerPort: 8080
 
 service:
-  type: NodePort
+  type: ClusterIP
   port: 8080
-  targetPort: 8080
 
 env:
   databaseHost: db
