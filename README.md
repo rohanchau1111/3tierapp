@@ -1,4 +1,4 @@
-  # My Book Collection
+# My Book Collection
 
 
 This is a simple CRUD application with a 3-tier architecture:
