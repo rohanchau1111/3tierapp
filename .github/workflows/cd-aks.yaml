@@ -1,21 +1,32 @@
 name: CD - Deploy to AKS
 
 on:
-  workflow_run:
-    workflows: ["Build & Push Images to Azure ACR"]
-    types: [completed]
+  # 🔹 Makes the workflow visible & runnable on feature branch
+  push:
+    branches:
+      - feature-local/test
 
+  # 🔹 Triggers automatically after CI succeeds
+  workflow_run:
+    workflows:
+      - "Build & Push Images to Azure ACR"
+    types:
+      - completed
+
+  # 🔹 Manual trigger
   workflow_dispatch:
 
 jobs:
   deploy:
-    if: github.event.workflow_run.conclusion == 'success' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
     runs-on: ubuntu-latest
 
+    # 🔹 GitHub Environment (uses vars & secrets)
     environment: dev
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       # 🔐 Azure Login
       - name: Azure Login
@@ -23,18 +34,18 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # ☸️ AKS Context
+      # ☸️ Set AKS context
       - name: Set AKS context
         uses: azure/aks-set-context@v3
         with:
           resource-group: ${{ vars.AKS_RESOURCE_GROUP }}
           cluster-name: ${{ vars.AKS_CLUSTER_NAME }}
 
-      # ⎈ Helm
+      # ⎈ Setup Helm
       - name: Setup Helm
         uses: azure/setup-helm@v4
 
-      # 🚀 Deploy Helm Chart
+      # 🚀 Deploy Helm chart
       - name: Deploy using Helm
         run: |
           helm upgrade --install ${{ vars.HELM_RELEASE }} ./k8s/3tier-app \
