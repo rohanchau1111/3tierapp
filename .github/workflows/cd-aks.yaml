@@ -2,7 +2,7 @@ name: CD - Deploy to AKS
 
 on:
   workflow_run:
-    workflows: ["CI"]
+    workflows: ["Build & Push Images to Azure ACR"]
     types: [completed]
 
   workflow_dispatch:
