@@ -23,7 +23,7 @@ module "aks" {
   location            = var.location
   aks_name            = var.aks_name
   subnet_id           = module.vnet.subnet_id
-}
+} 
 
 resource "azurerm_role_assignment" "aks_acr_pull" {
   principal_id         = module.aks.kubelet_object_id
