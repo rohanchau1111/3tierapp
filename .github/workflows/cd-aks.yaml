@@ -1,11 +1,4 @@
 name: CD - Deploy to AKS
-
-on:
-  # 🔹 Makes the workflow visible & runnable on feature branch
-  push:
-    branches:
-      - feature-local/test
-
   # 🔹 Triggers automatically after CI succeeds
   workflow_run:
     workflows:
