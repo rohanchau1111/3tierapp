@@ -1,5 +1,6 @@
 name: CD - Deploy to AKS
   #  Triggers automatically after CI succeeds
+on:
   workflow_run:
     workflows:
       - "Build & Push Images to Azure ACR"
